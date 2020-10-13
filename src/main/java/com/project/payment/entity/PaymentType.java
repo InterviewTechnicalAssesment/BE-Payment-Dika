@@ -24,4 +24,7 @@ public class PaymentType extends BaseEntity {
 
     @Column(name = "bank")
     private String bank;
+    
+    @Column(name = "name")
+    private String name;
 }
