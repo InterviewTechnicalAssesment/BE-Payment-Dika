@@ -1,0 +1,101 @@
+version: '3'
+services:
+  restaurant-mysql:
+    restart: always
+    container_name: restaurant-mysql
+    image: mysql
+    environment:
+      MYSQL_DATABASE: restaurant
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - ./sql/restaurant-mysql:/docker-entrypoint-initdb.d
+
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=root--execute \"SHOW DATABASES;\""
+      interval: 2s
+      timeout: 20s
+      retries: 10
+  
+  
+  restaurant-microservice:
+    restart: on-failure
+    build: ./restaurant-microservice
+    expose:
+      - "10222"
+    ports:
+      - 10222:10222
+    environment:
+      - DB_URL=jdbc:mysql://restaurant-mysql:3306/restaurant
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+    depends_on:
+      - restaurant-mysql
+
+  payment-mysql:
+      restart: always
+      container_name: payment-mysql
+      image: mysql
+      environment:
+        MYSQL_DATABASE: payment
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_ROOT_HOST: '%'
+      volumes:
+        - ./sql/payment-mysql:/docker-entrypoint-initdb.d
+
+      ports:
+        - "3307:3306"
+      healthcheck:
+        test: "/usr/bin/mysql --user=root --password=root--execute \"SHOW DATABASES;\""
+        interval: 2s
+        timeout: 20s
+        retries: 10
+
+  payment-microservice:
+      restart: on-failure
+      build: ./payment-microservice
+      expose:
+        - "10223"
+      ports:
+        - 10223:10223
+      environment:
+        - DB_URL=jdbc:mysql://payment-mysql:3306/payment
+        - DB_USERNAME=root
+        - DB_PASSWORD=root
+      depends_on:
+        - payment-mysql
+
+  promo-mysql:
+      restart: always
+      container_name: promo-mysql
+      image: mysql
+      environment:
+        MYSQL_DATABASE: promo
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_ROOT_HOST: '%'
+      volumes:
+        - ./sql/promo-mysql:/docker-entrypoint-initdb.d
+
+      ports:
+        - "3308:3306"
+      healthcheck:
+        test: "/usr/bin/mysql --user=root --password=root--execute \"SHOW DATABASES;\""
+        interval: 2s
+        timeout: 20s
+        retries: 10
+
+  promo-microservice:
+      restart: on-failure
+      build: ./promo-microservice
+      expose:
+        - "10224"
+      ports:
+        - 10224:10224
+      environment:
+        - DB_URL=jdbc:mysql://promo-mysql:3306/promo
+        - DB_USERNAME=root
+        - DB_PASSWORD=root
+      depends_on:
+        - promo-mysql
