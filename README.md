@@ -25,11 +25,6 @@ It is crucial to do it in sequence before starting the next step
 ### 1. Clone this Repository
 Go to your terminal or command prompt and clone this repository
 
-After the cloning process finish, navigate to the root directory of this project with the following command
-```script
-cd ms-inventory
-```
-
 ### 2. Bring all Services up
 On the root directory turn on all services with docker-compose
 ```script
@@ -47,7 +42,6 @@ In this Restaurant Promo Services, you gonna want to see all the menu can choose
 http://localhost:10022/swagger-ui.html
 ```
 This will direct you to the **Restaurant's Swagger UI**. Let's go to the catalogs by expanding the ***Menu Controller**. After that that find the following **/menu**. Hit that **try it out** and then the **execute** button.
-
 You will receive the following response
 ```script
 [
